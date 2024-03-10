@@ -1,10 +1,13 @@
-import authConfig from "@/auth.config"
-import { loginRoute } from "@/routes"
-import { getUserById } from "@/services/user"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import NextAuth, { Session } from "next-auth"
 
 import { db } from "@/lib/prisma"
+
+import authConfig from "@/auth.config"
+import { sendTwoFactorTokenEmail, sendVerificationEmail } from "@/mail/send-email"
+import { loginRoute } from "@/routes"
+import { generateTwoFactorToken, generateVerificationToken } from "@/services/token"
+import { deleteTwoFactorConfirmationById, getTwoFactorConfirmationByUserId } from "@/services/user"
 
 export const {
   handlers: { GET, POST },
@@ -18,6 +21,8 @@ export const {
   },
   events: {
     async linkAccount({ user, account }) {
+      console.log("auth.ts:")
+      console.log(user)
       // allow oauth withou email verification
       await db.user.update({
         where: { id: user.id },
@@ -27,12 +32,25 @@ export const {
   },
   callbacks: {
     async signIn({ user, account }) {
-      console.log("user", user)
       if (account?.provider !== "credentials") return true
+      try {
+        if (!user.emailVerified) {
+          const verificationToken = await generateVerificationToken(user.email!)
 
-      if (!user.emailVerified) return false
-      //TODO: add 2FA
-      return true
+          await sendVerificationEmail(verificationToken.email, verificationToken.token)
+          return `${loginRoute}/?error=email-not-verified`
+        }
+        if (user.isTwoFactorEnabled) {
+          const twoFactorConfirm = await getTwoFactorConfirmationByUserId(user.id!)
+          if (!twoFactorConfirm) {
+            return `${loginRoute}/?two-factor=true`
+          }
+          await deleteTwoFactorConfirmationById(twoFactorConfirm.id)
+        }
+        return true
+      } catch (error) {
+        return false
+      }
     },
     async jwt({ token, user }) {
       if (user) token.role = user.role

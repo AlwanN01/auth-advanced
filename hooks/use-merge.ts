@@ -6,11 +6,7 @@ type DeepPartial<T> = T extends unknown[]
       [P in keyof T]?: DeepPartial<T[P]>
     }
 
-type KeysOfUnion<T> = T extends T
-  ? keyof T extends keyof number | keyof string
-    ? never
-    : keyof T
-  : never
+type KeysOfUnion<T> = T extends number | string ? never : keyof T
 
 type SetMerge<S> = (value: DeepPartial<S> | ((prevState: S) => DeepPartial<S>)) => void
 
@@ -21,6 +17,7 @@ type Options<T> =
       uniqueArray?: T extends unknown[] ? boolean : never
       uniqueArrayOfObjects?: false
       uniqueProp?: never
+      emptyForStringProps?: T extends object ? boolean : never
     }
   | {
       deepMerge?: never // for object only
@@ -28,6 +25,7 @@ type Options<T> =
       uniqueArray?: T extends unknown[] ? boolean : never
       uniqueArrayOfObjects: true
       uniqueProp: T extends unknown[] ? KeysOfUnion<T[number]> & string : never
+      emptyForStringProps?: T extends object ? boolean : never
     }
 export const useMergeState = <T>(initialState: T, options: Options<T> = {}) => {
   const [state, setState] = useState(initialState)
@@ -37,14 +35,14 @@ export const useMergeState = <T>(initialState: T, options: Options<T> = {}) => {
       if (typeof newState === "function") newState = newState(prevState)
 
       if (isObject(initialState))
-        return mergeObject([prevState, newState], options.deepMerge ? options.deepMerge : false)
+        return mergeObject([prevState, newState], options.deepMerge, options.emptyForStringProps)
 
       if (Array.isArray(initialState)) {
         return mergeArray(
           options.mergeArrays ? [prevState, newState] : [newState],
           options.uniqueArray,
-          options.uniqueArrayOfObjects ? options.uniqueArrayOfObjects : false,
-          options.uniqueProp ? options.uniqueProp : undefined
+          options.uniqueArrayOfObjects,
+          options.uniqueProp
         )
       }
       return newState
@@ -64,7 +62,7 @@ function isObject(obj: unknown): obj is Record<string, unknown> {
  * @param {...object} objects - Objects to merge
  * @returns {object} New object with merged key/values
  */
-function mergeObject(objects: any[], deepMerge = false): any {
+function mergeObject(objects: any[], deepMerge = false, emptyForStringProps = false): any {
   return objects.reduce((prev, obj) => {
     Object.keys(obj).forEach(key => {
       const pVal = prev[key]
@@ -73,9 +71,11 @@ function mergeObject(objects: any[], deepMerge = false): any {
       if (Array.isArray(pVal) && Array.isArray(oVal)) {
         prev[key] = pVal.concat(...oVal)
       } else if (deepMerge && isObject(pVal) && isObject(oVal)) {
-        prev[key] = mergeObject([pVal, oVal])
+        prev[key] = mergeObject([pVal, oVal], deepMerge)
       } else {
-        prev[key] = oVal
+        // {success: 'ok', error:undefined} != {success: 'ok'}
+        if (emptyForStringProps && oVal == undefined && typeof pVal == "string") prev[key] = ""
+        else prev[key] = oVal
       }
     })
 
@@ -112,8 +112,12 @@ type Tes = (
       id: number
       name: string
       email: string
+      slice: string
     }
   | string
+  | number
 )[]
 
-// type TesNew = Tes extends unknown[] ? Tes : never
+type TesNew<T> = T extends number | string ? never : keyof T
+
+type Foo = TesNew<Tes[number]>

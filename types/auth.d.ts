@@ -7,20 +7,24 @@ declare module "next-auth" {
     user: {
       id: string
       role: UserRole
+      isTwoFactorEnabled: boolean
     } & DefaultSession["user"]
   }
   interface User {
     emailVerified: Date | null
     role: UserRole
+    isTwoFactorEnabled: boolean
   }
 }
 declare module "next-auth/jwt" {
   interface JWT {
     role: UserRole
+    isTwoFactorEnabled: boolean
   }
 }
 declare module "@auth/core/adapters" {
   interface AdapterUser {
     role: UserRole
+    isTwoFactorEnabled: boolean
   }
 }

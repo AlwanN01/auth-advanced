@@ -2,13 +2,13 @@
 
 import { hash } from "bcryptjs"
 
-import { sendVerificationEmail } from "@/mail/send-verification"
-import { RegisterSchema, registerSchema } from "@/schemas/auth-schema"
+import { sendVerificationEmail } from "@/mail/send-email"
+import { RegisterSchema } from "@/schemas/auth-schema"
+import { generateVerificationToken } from "@/services/token"
 import { createUser, getUserByEmail } from "@/services/user"
-import { generateVerificationToken } from "@/services/verification-token"
 
 export const register = async (values: RegisterSchema) => {
-  const validatedFields = registerSchema.safeParse(values)
+  const validatedFields = RegisterSchema.safeParse(values)
   if (!validatedFields.success) return { error: "Invalid Fields!" }
 
   const { email, password, name } = validatedFields.data

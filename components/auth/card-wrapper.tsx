@@ -1,13 +1,13 @@
 "use client"
 
 //#region Imports
-import type { Route } from "next"
 import type { FC } from "react"
+import type { Route } from "next"
 
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui"
 import { BackButton } from "@/components/auth/back-button"
 import { Header } from "@/components/auth/header"
 import { Social } from "@/components/auth/social"
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui"
 
 //#endregion Imports
 type Props = {

@@ -3,11 +3,12 @@
 //#region Imports
 import type { FC } from "react"
 import { useState } from "react"
-import { register } from "@/actions/register"
-import { RegisterSchema, registerSchema, registerSchemaDefaultValues } from "@/schemas/auth-schema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 
+import { register } from "@/actions/register"
+
+import { Button, Input } from "@/components/ui"
 import {
   Form,
   FormControl,
@@ -18,7 +19,8 @@ import {
 } from "@/components/ui/form"
 import { CardWrapper } from "@/components/auth/card-wrapper"
 import { FormNotification } from "@/components/form-notification"
-import { Button, Input } from "@/components/ui"
+
+import { RegisterSchema, registerSchemaDefaultValues } from "@/schemas/auth-schema"
 
 //#endregion Imports
 
@@ -28,14 +30,17 @@ export const RegisterForm: FC<Props> = ({}) => {
   const [success, setSuccess] = useState<string | undefined>("")
   const [error, setError] = useState<string | undefined>("")
   const form = useForm<RegisterSchema>({
-    resolver: zodResolver(registerSchema),
+    resolver: zodResolver(RegisterSchema),
     defaultValues: registerSchemaDefaultValues,
   })
   const isPending = form.formState.isSubmitting
+  console.log("components\\auth\\register-form.tsx:")
+  console.log(form.formState.errors)
   const onSubmit = async (data: RegisterSchema) => {
     const { error, success } = await register(data)
     setSuccess(success)
     setError(error)
+    // throw new Error("Not Implemented")
   }
   return (
     <CardWrapper
@@ -95,7 +100,7 @@ export const RegisterForm: FC<Props> = ({}) => {
           <FormNotification type="success" message={success} />
           <FormNotification type="error" message={error} />
           <Button type="submit" className="w-full" disabled={isPending}>
-            Sign up
+            Register
           </Button>
         </form>
       </Form>

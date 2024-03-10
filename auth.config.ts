@@ -1,10 +1,11 @@
-import type { NextAuthConfig } from "next-auth"
-import { loginSchema } from "@/schemas/auth-schema"
-import { getUserByEmail } from "@/services/user"
 import { compare } from "bcryptjs"
+import type { NextAuthConfig } from "next-auth"
 import credentials from "next-auth/providers/credentials"
 import github from "next-auth/providers/github"
 import google from "next-auth/providers/google"
+
+import { LoginSchema } from "@/schemas/auth-schema"
+import { getUserByEmail } from "@/services/user"
 
 export default {
   trustHost: true,
@@ -19,7 +20,7 @@ export default {
     }),
     credentials({
       async authorize(credentials) {
-        const validatedFields = loginSchema.safeParse(credentials)
+        const validatedFields = LoginSchema.safeParse(credentials)
         if (validatedFields.success) {
           const { email, password } = validatedFields.data
           const user = await getUserByEmail(email) //bypass, prisma is not yet compatible with edge runtime

@@ -17,10 +17,26 @@ export const getUserById = async (id: string) => {
     return null
   }
 }
-type CreateUserPayload = Pick<User, "email" | "name" | "password">
-export const createUser = async ({ email, name, password }: CreateUserPayload) => {
+type CreateUserProps = Pick<User, "email" | "name" | "password">
+export const createUser = async ({ email, name, password }: CreateUserProps) => {
   try {
     return await db.user.create({ data: { email, name, password } })
+  } catch (error) {
+    return null
+  }
+}
+
+export const getTwoFactorConfirmationByUserId = async (userId: string) => {
+  try {
+    return await db.twoFactorConfirmation.findUnique({ where: { userId } })
+  } catch (error) {
+    return null
+  }
+}
+
+export const deleteTwoFactorConfirmationById = async (id: string) => {
+  try {
+    return await db.twoFactorConfirmation.delete({ where: { id } })
   } catch (error) {
     return null
   }

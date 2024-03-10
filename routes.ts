@@ -9,7 +9,13 @@
  * @type {string[]}
  */
 export const loginRoute = "/auth/login"
-export const authRoutes = [loginRoute, "/auth/register", "/auth/error"] as const
+export const authRoutes = [
+  loginRoute,
+  "/auth/register",
+  "/auth/error",
+  "/auth/reset",
+  "/auth/new-password",
+] as const
 /**
  * The prefix for API authentication routes
  * Routes that start with this prefix are used for API authentication purposes

@@ -31,12 +31,10 @@ export const NewVerificationForm: FC<Props> = ({}) => {
       setMessage({ error: "Something went wrong!" })
     }
   }, [message.error, message.success, setMessage, token])
-  console.log(token)
   useEffect(() => {
     if (!initialized.current) onSubmit()
     initialized.current = true
   }, [onSubmit])
-  console.log(message)
   return (
     <CardWrapper
       headerLabel="Verify your email"
@@ -51,3 +49,5 @@ export const NewVerificationForm: FC<Props> = ({}) => {
     </CardWrapper>
   )
 }
+
+export type NewVerificationForm = typeof NewVerificationForm

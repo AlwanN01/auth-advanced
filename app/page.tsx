@@ -1,9 +1,10 @@
 import Link from "next/link"
-import { poppins } from "@/fonts/poppins"
 
 import { cn } from "@/lib/utils"
+
 import { Button } from "@/components/ui/button"
-import LoginButton from "@/components/auth/login-button"
+
+import { poppins } from "@/fonts/poppins"
 
 export default function Home() {
   return (
