@@ -1,4 +1,5 @@
 import * as React from "react"
+import { useFormContext } from "react-hook-form"
 
 import { cn } from "@/lib/utils"
 
@@ -6,6 +7,7 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, ...props }, ref) => {
+    const ctx = useFormContext()
     return (
       <input
         type={type}
@@ -14,6 +16,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           className
         )}
         ref={ref}
+        disabled={ctx ? ctx.formState.isSubmitting : false}
         {...props}
       />
     )

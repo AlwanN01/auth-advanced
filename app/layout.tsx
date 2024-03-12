@@ -3,6 +3,8 @@ import { Inter } from "next/font/google"
 
 import "./globals.css"
 
+import { ToastHot } from "@/components/ui/toast"
+
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
@@ -17,7 +19,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <div className="bg-gradient-primary h-full overflow-y-auto">
+          {children}
+          <ToastHot />
+        </div>
+      </body>
     </html>
   )
 }

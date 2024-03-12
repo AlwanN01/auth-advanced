@@ -6,8 +6,7 @@ declare module "next-auth" {
   interface Session {
     user: {
       id: string
-      role: UserRole
-      isTwoFactorEnabled: boolean
+      isOAuth: boolean
     } & DefaultSession["user"]
   }
   interface User {
@@ -20,11 +19,13 @@ declare module "next-auth/jwt" {
   interface JWT {
     role: UserRole
     isTwoFactorEnabled: boolean
+    isOAuth: boolean
   }
 }
 declare module "@auth/core/adapters" {
   interface AdapterUser {
     role: UserRole
     isTwoFactorEnabled: boolean
+    isOAuth: boolean
   }
 }

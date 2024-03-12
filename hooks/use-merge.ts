@@ -12,12 +12,11 @@ type SetMerge<S> = (value: DeepPartial<S> | ((prevState: S) => DeepPartial<S>)) 
 
 type Options<T> =
   | {
-      deepMerge?: T extends unknown[] ? never : boolean
+      deepMerge?: T extends unknown[] | string | number | null ? never : boolean
       mergeArrays?: T extends unknown[] ? boolean : never
       uniqueArray?: T extends unknown[] ? boolean : never
       uniqueArrayOfObjects?: false
       uniqueProp?: never
-      emptyForStringProps?: T extends object ? boolean : never
     }
   | {
       deepMerge?: never // for object only
@@ -25,17 +24,57 @@ type Options<T> =
       uniqueArray?: T extends unknown[] ? boolean : never
       uniqueArrayOfObjects: true
       uniqueProp: T extends unknown[] ? KeysOfUnion<T[number]> & string : never
-      emptyForStringProps?: T extends object ? boolean : never
     }
-export const useMergeState = <T>(initialState: T, options: Options<T> = {}) => {
+
+// export function useMergeState<T extends number | string | null>(
+//   initialState: T,
+//   options?: never
+// ): [T, SetMerge<T>, () => void]
+
+// export function useMergeState<T extends Record<string, unknown> | null>(
+//   initialState: T,
+//   options?: { deepMerge?: boolean }
+// ): [T, SetMerge<T>, () => void]
+
+// export function useMergeState<T extends (string | number | boolean)[] | null>(
+//   initialState: T,
+//   options?: {
+//     mergeArrays?: boolean
+//     uniqueArray?: boolean
+//   }
+// ): [T, SetMerge<T>, () => void]
+
+// export function useMergeState<T extends Record<string, unknown>[] | null>(
+//   initialState: T,
+//   options?: {
+//     mergeArrays?: boolean
+//     uniqueArrayOfObjects?: false
+//     uniqueProp?: never
+//   }
+// ): [T, SetMerge<T>, () => void]
+
+// export function useMergeState<T extends Record<string, unknown>[] | null>(
+//   initialState: T,
+//   options?: {
+//     mergeArrays?: boolean
+//     uniqueArrayOfObjects?: true
+//     uniqueProp?: T extends unknown[] ? KeysOfUnion<T[number]> & string : never
+//   }
+// ): [T, SetMerge<T>, () => void]
+
+// export function useMergeState<T extends unknown>(
+//   initialState: T,
+//   options?: Options<T>
+// ): [T, SetMerge<T>, () => void]
+
+export function useMergeState<T>(initialState: T, options: Options<T> = {}) {
   const [state, setState] = useState(initialState)
 
   const mergeState = useCallback((newState: T) => {
     setState(prevState => {
       if (typeof newState === "function") newState = newState(prevState)
 
-      if (isObject(initialState))
-        return mergeObject([prevState, newState], options.deepMerge, options.emptyForStringProps)
+      if (isObject(initialState)) return mergeObject([prevState, newState], options.deepMerge)
 
       if (Array.isArray(initialState)) {
         return mergeArray(
@@ -49,7 +88,8 @@ export const useMergeState = <T>(initialState: T, options: Options<T> = {}) => {
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  return [state, mergeState as SetMerge<T>] as const
+  const resetState = () => setState(initialState)
+  return [state, mergeState as SetMerge<T>, resetState] as const
 }
 function isObject(obj: unknown): obj is Record<string, unknown> {
   return typeof obj === "object" && obj !== null && !Array.isArray(obj)
@@ -118,6 +158,8 @@ type Tes = (
   | number
 )[]
 
-type TesNew<T> = T extends number | string ? never : keyof T
+type TesNew<T> = T extends number | string ? never : T
 
-type Foo = TesNew<Tes[number]>
+type Foo = keyof TesNew<Tes[number]>
+
+type Bar = 1 extends unknown[] ? true : false

@@ -2,7 +2,7 @@ import { compare } from "bcryptjs"
 import type { NextAuthConfig } from "next-auth"
 import credentials from "next-auth/providers/credentials"
 import github from "next-auth/providers/github"
-import google from "next-auth/providers/google"
+import google, { GoogleProfile } from "next-auth/providers/google"
 
 import { LoginSchema } from "@/schemas/auth-schema"
 import { getUserByEmail } from "@/services/user"

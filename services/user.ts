@@ -41,3 +41,11 @@ export const deleteTwoFactorConfirmationById = async (id: string) => {
     return null
   }
 }
+
+export const getAccountByUserId = async (userId: string) => {
+  try {
+    return await db.account.findFirst({ where: { userId } })
+  } catch (error) {
+    return null
+  }
+}

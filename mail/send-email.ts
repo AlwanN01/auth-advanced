@@ -31,6 +31,6 @@ export const sendTwoFactorTokenEmail = async (email: string, token: string) => {
     from: "onboarding@resend.dev",
     to: email,
     subject: "Two factor authentication code",
-    text: `Your two factor authentication code is ${token}`,
+    html: `<p>Your two factor authentication code is <strong>${token}</strong></p>`,
   })
 }

@@ -15,12 +15,21 @@ export const register = async (values: RegisterSchema) => {
   const hashedPassword = await hash(password, 10)
   const existingUser = await getUserByEmail(email)
 
-  if (existingUser) return { error: "Email already in use!" }
+  if (existingUser && existingUser.password) return { error: "Email already in use!" }
 
-  await createUser({ email, name, password: hashedPassword })
-
+  const cratedUser = await createUser({ email, name, password: hashedPassword })
+  if (!cratedUser) return { error: "Something went wrong while creating a user" }
   const verificationToken = await generateVerificationToken(email)
-  await sendVerificationEmail(verificationToken.email, verificationToken.token)
+  if (!verificationToken)
+    return { error: "Something went wrong while generating verification token" }
+  const sendEmailResponse = await sendVerificationEmail(
+    verificationToken.email,
+    verificationToken.token
+  )
+  console.log("actions\\register.ts:")
+  console.log(sendEmailResponse)
+  if (sendEmailResponse.error)
+    return { error: "Something went wrong while sending verification email" }
 
   return { success: `Success, please verify your email!` }
 }
