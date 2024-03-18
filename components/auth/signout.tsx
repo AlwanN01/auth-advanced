@@ -2,7 +2,7 @@
 
 import type { FC } from "react"
 import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { signOut } from "next-auth/react"
 import toast from "react-hot-toast"
 
@@ -12,7 +12,10 @@ type Props = ButtonProps
 
 const Signout: FC<Props> = props => {
   const router = useRouter()
+  const pathname = usePathname()
   const [loading, setLoading] = useState(false)
+  console.log("components\\auth\\signout.tsx:")
+  console.log(pathname)
   const onClick = async () => {
     const id = toast.loading("Loading...")
     try {
@@ -20,7 +23,7 @@ const Signout: FC<Props> = props => {
       setLoading(true)
       await signOut({ redirect: false })
       toast.success("Logout Successfuly", { id })
-      router.push("/")
+      router.push(pathname)
       setTimeout(() => router.refresh(), 100)
     } catch (error) {
       toast.error("Something went wrong.", { id })

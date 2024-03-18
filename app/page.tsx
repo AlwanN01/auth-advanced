@@ -3,6 +3,7 @@ import Link from "next/link"
 import { cn } from "@/lib/utils"
 
 import { Button } from "@/components/ui/button"
+import LoginButton from "@/components/auth/login-button"
 
 import { poppins } from "@/fonts/poppins"
 
@@ -18,11 +19,11 @@ export default function Home() {
         <p className="text-lg text-white">A simple authentication service</p>
       </div>
       <div className="mt-2">
-        {/* <LoginButton> */}
-        <Button variant="secondary" size="lg" asChild>
-          <Link href="/auth/login">Login</Link>
-        </Button>
-        {/* </LoginButton> */}
+        <LoginButton mode="modal" asChild>
+          <Button variant="secondary" size="lg">
+            Login
+          </Button>
+        </LoginButton>
       </div>
     </main>
   )

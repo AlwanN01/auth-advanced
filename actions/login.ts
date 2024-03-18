@@ -13,7 +13,7 @@ import { LoginSchema } from "@/schemas/auth-schema"
 import { generateTwoFactorToken, getTwoFactorTokenByEmail } from "@/services/token"
 import { getUserByEmail } from "@/services/user"
 
-export const login = async (values: LoginSchema) => {
+export const login = async (values: LoginSchema, callbackUrl?: string | null) => {
   const validatedFields = LoginSchema.safeParse(values)
 
   if (!validatedFields.success) return { error: "Invalid Fields!" }
@@ -61,7 +61,7 @@ export const login = async (values: LoginSchema) => {
       })
     }
 
-    redirect(DEFAULT_LOGIN_REDIRECT)
+    redirect(callbackUrl || DEFAULT_LOGIN_REDIRECT)
   } catch (error) {
     if (error instanceof AuthError) {
       console.log("actions\\login.ts:")

@@ -15,7 +15,8 @@ export const register = async (values: RegisterSchema) => {
   const hashedPassword = await hash(password, 10)
   const existingUser = await getUserByEmail(email)
 
-  if (existingUser && existingUser.password) return { error: "Email already in use!" }
+  if (existingUser) return { error: "Email already in use!" }
+  // if (existingUser && existingUser.password) return { error: "Email already in use!" }
 
   const cratedUser = await createUser({ email, name, password: hashedPassword })
   if (!cratedUser) return { error: "Something went wrong while creating a user" }

@@ -2,13 +2,14 @@
 
 //#region Imports
 import type { FC } from "react"
-import Link from "next/link"
 import { usePathname } from "next/navigation"
 
 import { cn } from "@/lib/utils"
 import { useSticky } from "@/hooks"
 
 import { Button } from "@/components/ui"
+import { Link } from "@/components/ui/dynamic-link"
+// import { DynamicLink } from "@/components/ui/dynamic-link"
 import { UserButton } from "@/components/auth/user-button"
 
 //#endregion Imports
@@ -25,7 +26,7 @@ export const Navbar: FC<Props> = ({}) => {
           isSticky && "top-0 z-50 scale-90 border border-primary/20 bg-transparent shadow-lg"
         )}
       >
-        <ul className="flex gap-x-2" aria-label="Main menu">
+        <menu className="flex gap-x-2" aria-label="Main menu">
           <Button variant={pathname == "/server" ? "default" : "outline"} as="li" asChild>
             <Link href="/server">Server</Link>
           </Button>
@@ -38,7 +39,7 @@ export const Navbar: FC<Props> = ({}) => {
           <Button variant={pathname == "/settings" ? "default" : "outline"} as="li" asChild>
             <Link href="/settings">Settings</Link>
           </Button>
-        </ul>
+        </menu>
         <UserButton />
       </nav>
     </div>

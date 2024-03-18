@@ -32,6 +32,7 @@ type Props = {}
 
 export const LoginForm: FC<Props> = ({}) => {
   const searchParams = useSearchParams()
+  const callbackUrl = searchParams.get("callbackUrl")
   const urlErrorMessage =
     searchParams.get("error") === "email-not-verified"
       ? "Email not verified!"
@@ -52,6 +53,8 @@ export const LoginForm: FC<Props> = ({}) => {
   })
   const isPending = form.formState.isSubmitting
   const onSubmit = async (data: LoginSchema) => {
+    console.log("components\\auth\\login-form.tsx:")
+    console.log(callbackUrl)
     setState({ error: "", success: "" })
     const code = form.getValues().code
     if (showTwoFactor) {
@@ -59,7 +62,7 @@ export const LoginForm: FC<Props> = ({}) => {
       if (code.length < 6) return form.setError("code", { message: "Code must be 6 digits" })
     }
     try {
-      const response = await login(data)
+      const response = await login(data, callbackUrl)
       if (response?.error) {
         showTwoFactor ? form.resetField("code") : form.resetField("password")
         setState({ error: response.error })

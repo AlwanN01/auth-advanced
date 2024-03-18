@@ -52,8 +52,6 @@ export const settings = async (values: SettingsSchema) => {
       where: { id: user.id },
       data,
     })
-    console.log("actions\\settings.ts:")
-    console.log(updatedUser)
     return { success: "Settings updated successfully." }
   } catch (error) {
     return { error: "Something went wrong while updating settings." }
