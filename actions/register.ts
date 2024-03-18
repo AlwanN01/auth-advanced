@@ -27,8 +27,6 @@ export const register = async (values: RegisterSchema) => {
     verificationToken.email,
     verificationToken.token
   )
-  console.log("actions\\register.ts:")
-  console.log(sendEmailResponse)
   if (sendEmailResponse.error)
     return { error: "Something went wrong while sending verification email" }
 

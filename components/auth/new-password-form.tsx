@@ -43,8 +43,6 @@ export const NewPasswordForm: FC<Props> = ({}) => {
     setMessage({ error, success })
     // TODO: add when we add 2FA
   }
-  console.log("components\\auth\\reset-form.tsx:")
-  console.log({ error, success })
   return (
     <CardWrapper
       headerLabel="Enter a new password"

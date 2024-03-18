@@ -12,8 +12,6 @@ type Props = ControllerRenderProps & {
 }
 
 export const OtpCodeInput = forwardRef<HTMLInputElement, Props>((Props, ref) => {
-  // console.log("components\\otp-code-input.tsx:")
-  // console.log(Props.value)
   return (
     <OTPInput
       maxLength={6}
@@ -60,7 +58,7 @@ function Slot(props: SlotProps) {
 }
 function FakeCaret() {
   return (
-    <div className="animate-caret-blink pointer-events-none absolute inset-0 flex items-center justify-center">
+    <div className="pointer-events-none absolute inset-0 flex animate-caret-blink items-center justify-center">
       <div className="h-8 w-px bg-white" />
     </div>
   )

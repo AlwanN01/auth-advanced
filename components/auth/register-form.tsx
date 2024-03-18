@@ -34,8 +34,6 @@ export const RegisterForm: FC<Props> = ({}) => {
     defaultValues: registerSchemaDefaultValues,
   })
   const isPending = form.formState.isSubmitting
-  console.log("components\\auth\\register-form.tsx:")
-  console.log(form.formState.errors)
   const onSubmit = async (data: RegisterSchema) => {
     const { error, success } = await register(data)
     setSuccess(success)

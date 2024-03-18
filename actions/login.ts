@@ -64,8 +64,6 @@ export const login = async (values: LoginSchema, callbackUrl?: string | null) =>
     redirect(callbackUrl || DEFAULT_LOGIN_REDIRECT)
   } catch (error) {
     if (error instanceof AuthError) {
-      console.log("actions\\login.ts:")
-      console.log(error)
       switch (error.type) {
         case "CredentialsSignin":
           return { error: "Invalid email or password!" }

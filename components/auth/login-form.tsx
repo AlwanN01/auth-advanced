@@ -53,8 +53,6 @@ export const LoginForm: FC<Props> = ({}) => {
   })
   const isPending = form.formState.isSubmitting
   const onSubmit = async (data: LoginSchema) => {
-    console.log("components\\auth\\login-form.tsx:")
-    console.log(callbackUrl)
     setState({ error: "", success: "" })
     const code = form.getValues().code
     if (showTwoFactor) {

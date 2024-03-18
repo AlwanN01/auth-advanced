@@ -14,8 +14,6 @@ const Signout: FC<Props> = props => {
   const router = useRouter()
   const pathname = usePathname()
   const [loading, setLoading] = useState(false)
-  console.log("components\\auth\\signout.tsx:")
-  console.log(pathname)
   const onClick = async () => {
     const id = toast.loading("Loading...")
     try {
@@ -23,22 +21,23 @@ const Signout: FC<Props> = props => {
       setLoading(true)
       await signOut({ redirect: false })
       toast.success("Logout Successfuly", { id })
-      router.push(pathname)
+
       setTimeout(() => router.refresh(), 100)
+      setTimeout(() => router.push(pathname), 200)
     } catch (error) {
       toast.error("Something went wrong.", { id })
     } finally {
       setTimeout(() => setLoading(false), 300)
     }
   }
-  const onMouseOver = () => router.prefetch("/")
+  // const onMouseOver = () => router.prefetch("/")
   return (
     <Button
       variant="destructive"
       size="sm"
       disabled={loading}
       onClick={onClick}
-      onMouseOver={onMouseOver}
+      // onMouseOver={onMouseOver}
       {...props}
     />
   )
