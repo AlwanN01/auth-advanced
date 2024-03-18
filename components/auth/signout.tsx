@@ -21,23 +21,22 @@ const Signout: FC<Props> = props => {
       setLoading(true)
       await signOut({ redirect: false })
       toast.success("Logout Successfuly", { id })
-
+      router.push("/")
       setTimeout(() => router.refresh(), 100)
-      setTimeout(() => router.push(pathname), 200)
     } catch (error) {
       toast.error("Something went wrong.", { id })
     } finally {
       setTimeout(() => setLoading(false), 300)
     }
   }
-  // const onMouseOver = () => router.prefetch("/")
+  const onMouseOver = () => router.prefetch("/")
   return (
     <Button
       variant="destructive"
       size="sm"
       disabled={loading}
       onClick={onClick}
-      // onMouseOver={onMouseOver}
+      onMouseOver={onMouseOver}
       {...props}
     />
   )
